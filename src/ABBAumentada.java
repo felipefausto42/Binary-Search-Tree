@@ -198,31 +198,49 @@ public class ABBAumentada {
 
     public void imprimeArvore(int s) {
         if (s == 1) {
-            imprimeArvoreFormato1(root);
+            imprimeArvoreFormato1(root, 0);
         } else if (s == 2) {
-            imprimeArvoreFormato2(root, 0);
+            imprimeArvoreFormato2(root);
         }
     }
 
-    private void imprimeArvoreFormato1(TreeNode node) {
+    private void imprimeArvoreFormato1(TreeNode node, int depth) {
         if (node != null) {
-            System.out.print(node.val + " ");
-            imprimeArvoreFormato1(node.left);
-            imprimeArvoreFormato1(node.right);
-        }
-    }
-
-    private void imprimeArvoreFormato2(TreeNode node, int depth) {
-        if (node != null) {
-            imprimeArvoreFormato2(node.right, depth + 1);
+            // Imprime espaços para representar a profundidade
             for (int i = 0; i < depth; i++) {
                 System.out.print("    ");
             }
-            System.out.println(node.val);
-            imprimeArvoreFormato2(node.left, depth + 1);
+
+            // Imprime o valor do nó
+            System.out.println(node.val + "----------");
+
+            // Imprime as subárvores recursivamente
+            imprimeArvoreFormato1(node.left, depth + 1);
+            imprimeArvoreFormato1(node.right, depth + 1);
         }
     }
-    
+
+    private void imprimeArvoreFormato2(TreeNode node) {
+        if (node != null) {
+            System.out.print("(" + node.val);
+
+            // Imprime a subárvore direita
+            if (node.right != null) {
+                System.out.print(" ");
+                imprimeArvoreFormato2(node.right);
+            }
+
+            // Imprime a subárvore esquerda
+            if (node.left != null) {
+                System.out.print(" ");
+                imprimeArvoreFormato2(node.left);
+            }
+
+            System.out.print(")");
+        }
+    }
+
+ 
     public static void main(String[] args) {
         if (args.length != 2) {
             System.out.println("Uso: java ABBAumentada arquivo_entrada.txt arquivo_comandos.txt");
@@ -258,6 +276,7 @@ public class ABBAumentada {
                 if (comando.equals("IMPRIMA")) {
                     int formato = Integer.parseInt(parts[1]);
                     abb.imprimeArvore(formato);
+                    System.out.println("\n");
                 } else if (comando.equals("MEDIANA")) {
                     System.out.println("Mediana: " + abb.mediana());
                 } else if (comando.equals("ENESIMO")) {
