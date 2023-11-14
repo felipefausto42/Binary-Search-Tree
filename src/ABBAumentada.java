@@ -94,28 +94,23 @@ public class ABBAumentada {
     }
 
     public int posicao(int x) {
-        int[] count = { 1 };
-        return posicao(root, x, count);
+        return posicao(root, x);
     }
 
-    private int posicao(TreeNode node, int x, int[] count) {
+    private int posicao(TreeNode node, int x) {
         if (node == null) {
             return -1;
         }
 
-        int leftPos = posicao(node.left, x, count);
-
-        if (leftPos != -1) {
-            return leftPos;
+        if (x < node.val) {
+            return posicao(node.left, x);
+        } else if (x > node.val) {
+            return 1 + size(node.left) + posicao(node.right, x);
+        } else {
+            return 1 + size(node.left);
         }
-
-        if (node.val == x) {
-            return count[0] + size(node.left);
-        }
-
-        count[0]++;
-        return posicao(node.right, x, count);
     }
+
 
     public int mediana() {
         int size = size(root);
@@ -182,6 +177,7 @@ public class ABBAumentada {
         return ehCompleta(node.left, 2 * index + 1, size) && ehCompleta(node.right, 2 * index + 2, size);
     }
 
+    
     public String preOrdem() {
         StringBuilder result = new StringBuilder();
         preOrdem(root, result);
@@ -292,7 +288,15 @@ public class ABBAumentada {
                 } else if (comando.equals("REMOVA")) {
                     int valorRemover = Integer.parseInt(parts[1]);
                     abb.remove(valorRemover);
-                }
+                    
+                    // Adicione a linha a seguir para atualizar a referência para a raiz
+                    abb.root = abb.root; // Esta linha não faz nada, mas mantém a referência atualizada
+                
+                } else if (comando.equals("INSIRA")) {
+                // Adiciona um novo valor à árvore
+                int valorInserir = Integer.parseInt(parts[1]);
+                abb.insert(valorInserir);
+            }
             }
             reader.close();
         } catch (IOException e) {
