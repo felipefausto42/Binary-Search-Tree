@@ -253,9 +253,13 @@ public class ABBAumentada {
             BufferedReader reader = new BufferedReader(new FileReader(arquivoEntrada));
             String line;
             while ((line = reader.readLine()) != null) {
-                int value = Integer.parseInt(line);
-                abb.insert(value);
+                String[] values = line.split(" ");
+                for (String valueStr : values) {
+                    int value = Integer.parseInt(valueStr);
+                    abb.insert(value);
+                }
             }
+
             reader.close();
         } catch (IOException e) {
             e.printStackTrace();
