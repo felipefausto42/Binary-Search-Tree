@@ -39,7 +39,6 @@ public class ABBAumentada {
         }
     }
 
-    // Adicionando versões modificadas dos métodos para aceitar um valor específico e retornar um booleano
     private TreeNode insert(TreeNode node, int valToInsert) {
         if (node == null) {
             return new TreeNode(valToInsert);
@@ -79,7 +78,6 @@ public class ABBAumentada {
         return node;
     }
 
-    // Adicionando método contains para verificar se um valor está na árvore
     public boolean contains(int val) {
         return contains(root, val);
     }
@@ -94,7 +92,7 @@ public class ABBAumentada {
         } else if (val > node.val) {
             return contains(node.right, val);
         } else {
-            return true; // O valor foi encontrado na árvore
+            return true; 
         }
     }
 
@@ -195,23 +193,34 @@ public class ABBAumentada {
     }
 
     public boolean ehCompleta() {
-        int index = 0;
-        return ehCompleta(root, index, size(root));
+        int height = altura(root);
+        return ehCompleta(root, 0, height);
     }
 
-    private boolean ehCompleta(TreeNode node, int index, int size) {
+    private boolean ehCompleta(TreeNode node, int level, int height) {
         if (node == null) {
             return true;
         }
 
-        if (index >= size) {
-            return false;
+        if (level == height - 1) {
+            return node.left == null && node.right == null;
         }
 
-        return ehCompleta(node.left, 2 * index + 1, size) && ehCompleta(node.right, 2 * index + 2, size);
+        return ehCompleta(node.left, level + 1, height) && ehCompleta(node.right, level + 1, height);
     }
 
-    
+    private int altura(TreeNode node) {
+        if (node == null) {
+            return 0;
+        }
+
+        int alturaEsquerda = altura(node.left);
+        int alturaDireita = altura(node.right);
+
+        return 1 + Math.max(alturaEsquerda, alturaDireita);
+    }
+
+   
     public String preOrdem() {
         StringBuilder result = new StringBuilder();
         preOrdem(root, result);
@@ -236,15 +245,12 @@ public class ABBAumentada {
 
     private void imprimeArvoreFormato1(TreeNode node, int depth) {
         if (node != null) {
-            // Imprime espaços para representar a profundidade
             for (int i = 0; i < depth; i++) {
                 System.out.print("    ");
             }
 
-            // Imprime o valor do nó
             System.out.println(node.val + "----------");
 
-            // Imprime as subárvores recursivamente
             imprimeArvoreFormato1(node.left, depth + 1);
             imprimeArvoreFormato1(node.right, depth + 1);
         }
@@ -254,21 +260,20 @@ public class ABBAumentada {
         if (node != null) {
             System.out.print("(" + node.val);
 
-            // Imprime a subárvore direita
-            if (node.right != null) {
-                System.out.print(" ");
-                imprimeArvoreFormato2(node.right);
-            }
-
-            // Imprime a subárvore esquerda
             if (node.left != null) {
                 System.out.print(" ");
                 imprimeArvoreFormato2(node.left);
             }
 
+            if (node.right != null) {
+                System.out.print(" ");
+                imprimeArvoreFormato2(node.right);
+            }
+
             System.out.print(")");
         }
     }
+
 
  
     public static void main(String[] args) {
@@ -282,7 +287,7 @@ public class ABBAumentada {
 
         ABBAumentada abb = new ABBAumentada();
 
-        // Ler o arquivo de entrada e construir a ABB
+        // Leitura do arquivo base e construção da ABB
         try {
             BufferedReader reader = new BufferedReader(new FileReader(arquivoEntrada));
             String line;
@@ -300,7 +305,7 @@ public class ABBAumentada {
             return;
         }
 
-        // Ler o arquivo de comandos e executar as operações
+        // Leitura dos arquivos de comando
         try {
             BufferedReader reader = new BufferedReader(new FileReader(arquivoComandos));
             String line;
@@ -327,7 +332,7 @@ public class ABBAumentada {
                     }
                 } else if (comando.equals("COMPLETA")) {
                     if (abb.ehCompleta()) {
-                    	System.out.println("A árvore é árvore completa");                    	
+                    	System.out.println("A árvore é completa");                    	
                     }else {
                     	System.out.println("A árvore não é completa");
                     }
@@ -346,14 +351,12 @@ public class ABBAumentada {
                     int valorRemover = Integer.parseInt(parts[1]);
                     abb.remove(valorRemover);
                     
-                    // Adicione a linha a seguir para atualizar a referência para a raiz
-                    abb.root = abb.root; // Esta linha não faz nada, mas mantém a referência atualizada
+                    abb.root = abb.root; 
                 
                 } else if (comando.equals("INSIRA")) {
-                // Adiciona um novo valor à árvore
                 int valorInserir = Integer.parseInt(parts[1]);
                 abb.insert(valorInserir);
-            }
+                }
             }
             reader.close();
         } catch (IOException e) {
