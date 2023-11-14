@@ -17,38 +17,53 @@ class TreeNode {
 public class ABBAumentada {
     private TreeNode root;
 
-    public void insert(int val) {
-        root = insert(root, val);
+    public boolean insert(int val) {
+        if (contains(val)) {
+            System.out.println(val + " já está na árvore, não pode ser inserido");
+            return false;
+        } else {
+            root = insert(root, val);
+            System.out.println(val + " adicionado");
+            return true;
+        }
     }
 
-    private TreeNode insert(TreeNode node, int val) {
+    public boolean remove(int val) {
+        if (!contains(val)) {
+            System.out.println(val + " não está na árvore, não pode ser removido");
+            return false;
+        } else {
+            root = remove(root, val);
+            System.out.println(val + " removido");
+            return true;
+        }
+    }
+
+    // Adicionando versões modificadas dos métodos para aceitar um valor específico e retornar um booleano
+    private TreeNode insert(TreeNode node, int valToInsert) {
         if (node == null) {
-            return new TreeNode(val);
+            return new TreeNode(valToInsert);
         }
 
-        if (val < node.val) {
-            node.left = insert(node.left, val);
-        } else if (val > node.val) {
-            node.right = insert(node.right, val);
+        if (valToInsert < node.val) {
+            node.left = insert(node.left, valToInsert);
+        } else if (valToInsert > node.val) {
+            node.right = insert(node.right, valToInsert);
         }
 
         node.size = 1 + size(node.left) + size(node.right);
         return node;
     }
 
-    public void remove(int val) {
-        root = remove(root, val);
-    }
-
-    private TreeNode remove(TreeNode node, int val) {
+    private TreeNode remove(TreeNode node, int valToRemove) {
         if (node == null) {
             return null;
         }
 
-        if (val < node.val) {
-            node.left = remove(node.left, val);
-        } else if (val > node.val) {
-            node.right = remove(node.right, val);
+        if (valToRemove < node.val) {
+            node.left = remove(node.left, valToRemove);
+        } else if (valToRemove > node.val) {
+            node.right = remove(node.right, valToRemove);
         } else {
             if (node.left == null) {
                 return node.right;
@@ -62,6 +77,25 @@ public class ABBAumentada {
 
         node.size = 1 + size(node.left) + size(node.right);
         return node;
+    }
+
+    // Adicionando método contains para verificar se um valor está na árvore
+    public boolean contains(int val) {
+        return contains(root, val);
+    }
+
+    private boolean contains(TreeNode node, int val) {
+        if (node == null) {
+            return false;
+        }
+
+        if (val < node.val) {
+            return contains(node.left, val);
+        } else if (val > node.val) {
+            return contains(node.right, val);
+        } else {
+            return true; // O valor foi encontrado na árvore
+        }
     }
 
     private int minValue(TreeNode node) {
@@ -278,17 +312,36 @@ public class ABBAumentada {
                     abb.imprimeArvore(formato);
                     System.out.println("\n");
                 } else if (comando.equals("MEDIANA")) {
-                    System.out.println("Mediana: " + abb.mediana());
+                    System.out.println(abb.mediana());
                 } else if (comando.equals("ENESIMO")) {
                     int n = Integer.parseInt(parts[1]);
-                    System.out.println("N-ésimo elemento: " + abb.enesimoElemento(n));
+                    System.out.println(abb.enesimoElemento(n));
                 } else if (comando.equals("POSICAO")) {
                     int x = Integer.parseInt(parts[1]);
-                    System.out.println("Posição do elemento: " + abb.posicao(x));
+                    System.out.println(abb.posicao(x));
                 } else if (comando.equals("CHEIA")) {
-                    System.out.println("É uma árvore cheia? " + abb.ehCheia());
+                    if (abb.ehCheia()) {
+                    	System.out.println("A árvore é cheia");    	
+                    }else {
+                    	System.out.println("A árvore não é cheia");
+                    }
                 } else if (comando.equals("COMPLETA")) {
-                    System.out.println("É uma árvore completa? " + abb.ehCompleta());
+                    if (abb.ehCompleta()) {
+                    	System.out.println("A árvore é árvore completa");                    	
+                    }else {
+                    	System.out.println("A árvore não é completa");
+                    }
+                } else if (comando.equals("MEDIA")) {
+                    System.out.println(abb.media(abb.root));
+                } else if (comando.equals("PREORDEM")) {
+                    System.out.println(abb.preOrdem());
+                } else if (comando.equals("BUSCAR")) {
+                    int valorBusca = Integer.parseInt(parts[1]);
+                    if (abb.contains(valorBusca)) {
+                        System.out.println("Chave encontrada");
+                    } else {
+                        System.out.println("Chave não encontrada");
+                    }
                 } else if (comando.equals("REMOVA")) {
                     int valorRemover = Integer.parseInt(parts[1]);
                     abb.remove(valorRemover);
